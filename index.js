@@ -83,6 +83,17 @@ async function run() {
             res.json(result);
         });
 
+        // app.delete('/cart/:id', async (req, res) => {
+        //     const productId = req.params.id;
+        //     const qurey = { _id: ObjectId(productId) };
+        //     const result = await cart_Callection.deleteOne(qurey);
+        //     console.log('deletein an user', result);
+        //     res.json(result);
+
+        // })
+
+
+
         // purchase delete api
         app.delete("/purchase/:uid", async (req, res) => {
             const uid = req.params.uid;
