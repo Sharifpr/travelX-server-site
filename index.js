@@ -47,8 +47,8 @@ async function run() {
         });
 
         // load single data API
-        app.get('/packages/:_id', async (req, res) => {
-            const id = req.params._id;
+        app.get('/packages/:id', async (req, res) => {
+            const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const package = await Package_Collection.findOne(query);
             res.json(package)
@@ -77,8 +77,8 @@ async function run() {
 
 
         // delete data from cart delete api
-        app.delete("/delete/:_id", async (req, res) => {
-            const id = req.params._id;
+        app.delete("/delete/:id", async (req, res) => {
+            const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await cart_Collection.deleteOne(query);
             res.json(result);
@@ -93,11 +93,29 @@ async function run() {
             res.json(result);
         });
 
-        // // orders get api
-        // app.get("/orders", async (req, res) => {
-        //     const result = await cart_Collection.find({}).toArray();
-        //     res.json(result);
-        // });
+        // orders get api
+        app.get("/orders", async (req, res) => {
+            const result = await cart_Collection.find({}).toArray();
+            res.json(result);
+            // console.log(result);
+        });
+
+
+        // added Post for admin api
+        app.post('/packages', async (req, res) => {
+            const package = req.body;
+            const result = await Package_Collection.insertOne(package)
+            console.log(result);
+            res.json(result)
+        })
+
+        // get all data show from api for admin 
+        app.get('/packages', async (req, res) => {
+            const cursor = Package_Collection.find({})
+            const packages = await cursor.toArray()
+            res.send(packages)
+        })
+
 
     }
     finally {
