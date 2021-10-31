@@ -13,7 +13,7 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.diumk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
-console.log(uri);
+// console.log(uri);
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -26,7 +26,7 @@ async function run() {
         const Package_Collection = database.collection("packages");
         const cart_Collection = database.collection('cart')
 
-        // get all data
+        // get all data API
         app.get('/packages', async (req, res) => {
             const size = parseInt(req.query.size);
             const page = req.query.page;
@@ -46,9 +46,9 @@ async function run() {
 
         });
 
-        // load single data
-        app.get('/packages/:id', async (req, res) => {
-            const id = req.params.id;
+        // load single data API
+        app.get('/packages/:_id', async (req, res) => {
+            const id = req.params._id;
             const query = { _id: ObjectId(id) };
             const package = await Package_Collection.findOne(query);
             res.json(package)
@@ -69,6 +69,7 @@ async function run() {
         app.post("/package/add", async (req, res) => {
             const package = req.body;
             const result = await cart_Collection.insertOne(package);
+            console.log(result.insertedId);
             res.json(result);
         });
 
@@ -76,22 +77,12 @@ async function run() {
 
 
         // delete data from cart delete api
-        app.delete("/delete/:id", async (req, res) => {
-            const id = req.params.id;
+        app.delete("/delete/:_id", async (req, res) => {
+            const id = req.params._id;
             const query = { _id: ObjectId(id) };
             const result = await cart_Collection.deleteOne(query);
             res.json(result);
         });
-
-        // app.delete('/cart/:id', async (req, res) => {
-        //     const productId = req.params.id;
-        //     const qurey = { _id: ObjectId(productId) };
-        //     const result = await cart_Callection.deleteOne(qurey);
-        //     console.log('deletein an user', result);
-        //     res.json(result);
-
-        // })
-
 
 
         // purchase delete api
